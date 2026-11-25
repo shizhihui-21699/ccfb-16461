@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>银行网页登录 - 验证码</title>
+</head>
+<body>
+  <h1>短信验证码登录</h1>
+  <form method="post" action="/auth/otp" autocomplete="on">
+    <label for="otp">短信验证码</label>
+    <!--
+      关键属性：
+      - autocomplete="one-time-code"：Safari/Chrome 据此把短信验证码推到键盘候选条；
+      - inputmode="numeric"：移动端弹数字键盘；
+      - iOS 14+ 的域名绑定由系统读取短信最后一行 `@bank.example #123456`，
+        仅当当前站点域名与 @ 后域名匹配时才给候选，钓鱼域拿不到自动填充。
+    -->
+    <input
+      id="otp"
+      name="otp"
+      type="text"
+      inputmode="numeric"
+      autocomplete="one-time-code"
+      maxlength="6"
+      required>
+    <button type="submit">登录</button>
+  </form>
+
+  <p>电脑端收不到自动填充？改用
+    <a href="/auth/qr">扫码登录</a> 或
+    <a href="/auth/passkey">通行密钥（passkey）</a>。
+  </p>
+
+  <script>
+    // 网页端无法区分自动填充与手动输入（浏览器无统一 API），
+    // 风险识别交给服务端：域名绑定已在系统层拦截自动填充，
+    // 手动输入场景由服务端结合设备指纹、IP、重复申请等信号决策。
+    document.getElementById('otp').addEventListener('input', function (e) {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
+    });
+  </script>
+</body>
+</html>

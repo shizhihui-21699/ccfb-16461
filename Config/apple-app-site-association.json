@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [ "TEAMID.com.example.bankapp" ],
+        "components": [
+          { "/": "/auth/*" }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [ "TEAMID.com.example.bankapp" ]
+  }
+}

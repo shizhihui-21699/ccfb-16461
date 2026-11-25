@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<!-- 共享网页凭证 + 域名绑定 OTP 自动填充依赖 webcredentials 关联 -->
+		<string>webcredentials:bank.example</string>
+		<!-- 通用链接（扫码登录、营销/通知回跳 App） -->
+		<string>applinks:bank.example</string>
+		<!-- 若登录在独立子域，子域需单独声明（或用 *.bank.example 通配） -->
+		<string>webcredentials:auth.bank.example</string>
+	</array>
+</dict>
+</plist>
