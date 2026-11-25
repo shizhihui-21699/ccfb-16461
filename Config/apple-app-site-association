@@ -1,0 +1,26 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "TEAMID1234.com.example.phonebank"
+        ],
+        "components": [
+          {
+            "/": "/login",
+            "comment": "Bank login and OTP flow"
+          },
+          {
+            "/": "/login/*",
+            "comment": "Bank login and OTP sub-pages"
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "TEAMID1234.com.example.phonebank"
+    ]
+  }
+}

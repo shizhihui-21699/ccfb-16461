@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>短信验证码 - 桌面网页回退示例</title>
+</head>
+<body>
+  <!--
+    真正的银行网站必须使用 HTTPS，并设置：
+    autocomplete="one-time-code"
+
+    iOS/macOS Safari 会识别短信最后的：
+    @login.bankexample.cn #123456
+
+    并只在当前页面域名匹配时提示自动填充。仿冒网站拿不到这个填充。
+  -->
+  <form id="otp-form" method="post" action="/login/otp/verify">
+    <label for="otp">短信验证码</label>
+    <input
+      id="otp"
+      name="code"
+      inputmode="numeric"
+      pattern="[0-9]{4,8}"
+      minlength="6"
+      maxlength="8"
+      autocomplete="one-time-code"
+      required
+      aria-describedby="otp-help">
+
+    <p id="otp-help">
+      请确认地址栏为 <strong>https://login.bankexample.cn</strong>。
+      银行不会通过电话、QQ、微信或远程控制软件索取验证码。
+    </p>
+
+    <button type="submit">登录</button>
+  </form>
+
+  <dialog id="risk-dialog" aria-labelledby="risk-title">
+    <h2 id="risk-title">请核对官方网址</h2>
+    <p>
+      您正在手动输入或粘贴验证码。请确认浏览器地址栏域名完全等于
+      <strong>login.bankexample.cn</strong>，且证书由受信任机构签发给本银行。
+    </p>
+    <p>
+      如果页面是他人通过短信、聊天、电话或扫码让您打开的，请立即停止。
+      更安全的方式是使用手机银行 App 扫码确认或通行密钥登录。
+    </p>
+    <menu>
+      <button id="risk-cancel" type="button">停止</button>
+      <button id="risk-confirm" type="button">网址无误，继续</button>
+    </menu>
+  </dialog>
+
+  <script>
+    (function () {
+      const officialDomain = 'login.bankexample.cn';
+      const form = document.getElementById('otp-form');
+      const input = document.getElementById('otp');
+      const dialog = document.getElementById('risk-dialog');
+      const confirm = document.getElementById('risk-confirm');
+      const cancel = document.getElementById('risk-cancel');
+
+      let manualEntry = false;
+      let acknowledged = false;
+
+      input.addEventListener('input', (event) => {
+        // insertFromPaste / insertFromDrop 也属于高风险手动转交路径。
+        if (event.inputType && event.inputType !== 'insertReplacementText') {
+          manualEntry = true;
+        }
+      });
+
+      input.addEventListener('paste', () => {
+        manualEntry = true;
+      });
+
+      form.addEventListener('submit', (event) => {
+        if (acknowledged || !manualEntry) return;
+
+        event.preventDefault();
+        if (typeof dialog.showModal === 'function') {
+          dialog.showModal();
+        } else if (window.confirm('请确认网址为 ' + officialDomain + '，并继续。')) {
+          acknowledged = true;
+          form.submit();
+        }
+      });
+
+      confirm.addEventListener('click', () => {
+        acknowledged = true;
+        dialog.close();
+        form.submit();
+      });
+
+      cancel.addEventListener('click', () => {
+        dialog.close();
+        input.value = '';
+        manualEntry = false;
+        acknowledged = false;
+      });
+    })();
+  </script>
+</body>
+</html>
